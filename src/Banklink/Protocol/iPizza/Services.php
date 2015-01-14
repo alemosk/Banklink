@@ -11,12 +11,12 @@ namespace Banklink\Protocol\iPizza;
 final class Services
 {
     // Requests
-    const PAYMENT_REQUEST      = '1001';
+    const PAYMENT_REQUEST      = '1011';
     const AUTHENTICATE_REQUEST = '3001';
 
     // Responses
-    const PAYMENT_SUCCESS      = '1101';
-    const PAYMENT_CANCEL       = '1901';
+    const PAYMENT_SUCCESS      = '1111';
+    const PAYMENT_CANCEL       = '1911';
     const PAYMENT_ERROR        = '1902';
     const AUTHENTICATE_SUCCESS = '3002';
 
@@ -41,7 +41,10 @@ final class Services
                     Fields::SELLER_BANK_ACC,
                     Fields::SELLER_NAME,
                     Fields::ORDER_REFERENCE,
-                    Fields::DESCRIPTION
+                    Fields::DESCRIPTION,
+                    Fields::SUCCESS_URL,
+                    Fields::CANCEL_URL,
+                    Fields::DATETIME
                 );
             case Services::PAYMENT_SUCCESS:
                 return array(
@@ -59,7 +62,7 @@ final class Services
                     Fields::SENDER_NAME,
                     Fields::ORDER_REFERENCE,
                     Fields::DESCRIPTION,
-                    Fields::TRANSACTION_DATE,
+                    Fields::TRANSACTION_DATE
                 );
             case Services::PAYMENT_CANCEL:
                 return array(
