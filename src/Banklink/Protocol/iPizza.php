@@ -26,6 +26,7 @@ class iPizza implements ProtocolInterface
     protected $sellerAccountNumber;
 
     protected $endpointUrl;
+    protected $cancelUrl;
 
     protected $protocolVersion;
 
@@ -43,7 +44,7 @@ class iPizza implements ProtocolInterface
      * @param string  $version
      * @param boolean $mbStrlen      Use mb_strlen for string length calculation?
      */
-    public function __construct($sellerId, $sellerName, $sellerAccNum, $privateKey, $publicKey, $endpointUrl, $mbStrlen = false, $version = '008')
+    public function __construct($sellerId, $sellerName, $sellerAccNum, $privateKey, $publicKey, $endpointUrl, $cancelUrl, $mbStrlen = false, $version = '008')
     {
         $this->sellerId            = $sellerId;
         $this->sellerName          = $sellerName;
@@ -56,6 +57,7 @@ class iPizza implements ProtocolInterface
         $this->mbStrlen            = $mbStrlen;
 
         $this->protocolVersion     = $version;
+        $this->cancelUrl = $cancelUrl;
     }
 
     /**
@@ -70,6 +72,7 @@ class iPizza implements ProtocolInterface
      */
     public function preparePaymentRequestData($orderId, $sum, $message, $outputEncoding, $language = 'EST', $currency = 'EUR')
     {
+        $datetime = new \DateTime();
         $requestData = array(
             Fields::SERVICE_ID       => Services::PAYMENT_REQUEST,
             Fields::PROTOCOL_VERSION => $this->protocolVersion,
@@ -83,7 +86,8 @@ class iPizza implements ProtocolInterface
             Fields::DESCRIPTION      => $message,
             Fields::SUCCESS_URL      => $this->endpointUrl,
             Fields::CANCEL_URL       => $this->endpointUrl,
-            Fields::USER_LANG        => $language
+            Fields::USER_LANG        => $language,
+            Fields::DATETIME		 => $datetime->format(\DateTime::ISO8601)
         );
 
         $requestData = ProtocolUtils::convertValues($requestData, 'UTF-8', $outputEncoding);
@@ -160,11 +164,15 @@ class iPizza implements ProtocolInterface
     protected function getRequestSignature($data)
     {
         $hash = $this->generateHash($data);
+		if (is_file($this->privateKey)) {
+            $keyId = openssl_get_privatekey('file://'.$this->privateKey);
+        }
+        else {
+            $keyId = openssl_get_privatekey($this->privateKey);
+        }
 
-        $keyId = openssl_get_privatekey('file://'.$this->privateKey);
         openssl_sign($hash, $signature, $keyId);
         openssl_free_key($keyId);
-
         $result = base64_encode($signature);
 
         return $result;
@@ -182,7 +190,12 @@ class iPizza implements ProtocolInterface
     {
         $hash = $this->generateHash($responseData, $encoding);
 
-        $keyId = openssl_pkey_get_public('file://'.$this->publicKey);
+		if (is_file($this->publicKey)) {
+            $keyId = openssl_pkey_get_public('file://'.$this->publicKey);
+        }
+        else {
+            $keyId = openssl_pkey_get_public($this->publicKey);
+        }
         $result = openssl_verify($hash, base64_decode($responseData[Fields::SIGNATURE]), $keyId);
         openssl_free_key($keyId);
 
