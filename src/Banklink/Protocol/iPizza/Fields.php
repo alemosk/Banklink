@@ -31,16 +31,16 @@ final class Fields
     const SENDER_NAME              = 'VK_SND_NAME';
     const SENDER_BANK_ACC          = 'VK_SND_ACC';
     const TRANSACTION_ID           = 'VK_T_NO';
-    const TRANSACTION_DATE         = 'VK_T_DATE';
+    const TRANSACTION_DATE         = 'VK_T_DATETIME';
 
     // Callback URLs
     const SUCCESS_URL       = 'VK_RETURN';
     const CANCEL_URL        = 'VK_CANCEL';
+    const DATETIME			= 'VK_DATETIME';
 
     // Request configs
     // This data will most likely be static
     const PROTOCOL_VERSION  = 'VK_VERSION';
-
     const SIGNATURE         = 'VK_MAC';
 
     /**
