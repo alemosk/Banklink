@@ -14,7 +14,7 @@ use Banklink\Protocol\iPizza;
 class Swedbank extends Banklink
 {
     protected $requestUrl = 'https://www.swedbank.ee/banklink';
-    protected $testRequestUrl = 'https://pangalink.net/banklink/swedbank';
+    protected $testRequestUrl = 'https://pangalink.net/banklink/swedbank-common';
 
     /**
      * Force iPizza protocol
