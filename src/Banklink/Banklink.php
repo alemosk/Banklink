@@ -37,6 +37,19 @@ abstract class Banklink
             $this->requestUrl = $this->testRequestUrl;
         }
     }
+    
+    /**
+     * Defines test request url. Considering that public pangalink
+     * sandbox does not exists anymore you should provide own
+     * sandbox domain. Other part of url will be appended from
+     * default test url.
+     *
+     * @param string $sandbox
+     */
+    public function setTestMode($sandbox)
+    {
+    	$this->requestUrl = str_replace('https://pangalink.net', rtrim($sandbox, '/'), $this->testRequestUrl);
+    }
 
     /**
      * @param integer $orderId
