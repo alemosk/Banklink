@@ -35,7 +35,7 @@ class LHV extends Banklink
      */
     protected function getEncodingField()
     {
-        return 'VK_CHARSET';
+        return 'VK_ENCODING';
     }
 
     /**
@@ -48,7 +48,7 @@ class LHV extends Banklink
     protected function getAdditionalFields()
     {
         return array(
-            'VK_CHARSET' => 'UTF-8'
+            'VK_ENCODING' => 'UTF-8'
         );
     }
 }
