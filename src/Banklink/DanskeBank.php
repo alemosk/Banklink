@@ -40,6 +40,8 @@ class DanskeBank extends Banklink
      */
     protected function getAdditionalFields()
     {
-        return array();
+        return array(
+            'VK_ENCODING' => 'UTF-8'
+        );
     }
 }
