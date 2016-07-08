@@ -14,7 +14,7 @@ use Banklink\Protocol\iPizza;
 class LHV extends Banklink
 {
     protected $requestUrl = 'https://www.lhv.ee/banklink';
-    protected $testRequestUrl = 'https://pangalink.net/banklink/lhv-common';
+    protected $testRequestUrl = 'https://banklinks.herokuapp.com/banklink/lhv-common';
     
     protected $responseEncoding = 'UTF-8';
 
@@ -48,7 +48,7 @@ class LHV extends Banklink
     protected function getAdditionalFields()
     {
         return array(
-            'VK_ENCODING' => 'UTF-8'
+            'VK_ENCODING' => $this->requestEncoding
         );
     }
 }

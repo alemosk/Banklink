@@ -44,7 +44,7 @@ class iPizza implements ProtocolInterface
      * @param string  $version
      * @param boolean $mbStrlen      Use mb_strlen for string length calculation?
      */
-    public function __construct($sellerId, $sellerName, $sellerAccNum, $privateKey, $publicKey, $endpointUrl, $cancelUrl, $mbStrlen = false, $version = '008')
+    public function __construct($sellerId, $sellerName, $sellerAccNum, $privateKey, $publicKey, $endpointUrl, $cancelUrl, $mbStrlen = true, $version = '008')
     {
         $this->sellerId            = $sellerId;
         $this->sellerName          = $sellerName;
@@ -85,9 +85,9 @@ class iPizza implements ProtocolInterface
             Fields::ORDER_REFERENCE  => ProtocolUtils::generateOrderReference($orderId),
             Fields::DESCRIPTION      => $message,
             Fields::SUCCESS_URL      => $this->endpointUrl,
-            Fields::CANCEL_URL       => $this->endpointUrl,
+            Fields::CANCEL_URL       => $this->cancelUrl,
+            Fields::DATETIME		 => $datetime->format(\DateTime::ISO8601),
             Fields::USER_LANG        => $language,
-            Fields::DATETIME		 => $datetime->format(\DateTime::ISO8601)
         );
 
         $requestData = ProtocolUtils::convertValues($requestData, 'UTF-8', $outputEncoding);
@@ -165,10 +165,10 @@ class iPizza implements ProtocolInterface
     {
         $hash = $this->generateHash($data);
 		if (is_file($this->privateKey)) {
-            $keyId = openssl_get_privatekey('file://'.$this->privateKey);
+            $keyId = openssl_pkey_get_private('file://'.$this->privateKey);
         }
         else {
-            $keyId = openssl_get_privatekey($this->privateKey);
+            $keyId = openssl_pkey_get_private($this->privateKey);
         }
 
         openssl_sign($hash, $signature, $keyId);
